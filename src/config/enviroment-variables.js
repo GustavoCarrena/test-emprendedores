@@ -1,0 +1,9 @@
+const { VITE_BASE_URL, VITE_API_URL, VITE_APP_TITLE, VITE_APP_NAME } =
+  import.meta.env
+
+export const ENV = {
+  VITE_BASE_URL,
+  VITE_API_URL,
+  VITE_APP_TITLE,
+  VITE_APP_NAME,
+}
