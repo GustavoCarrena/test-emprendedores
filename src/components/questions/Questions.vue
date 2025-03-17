@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-baseline items-baseline">
+  <div class="flex justify-baseline items-start">
     <span class="ml-1 mr-3">1.</span>
     <span class="text-left"
       >¿Por qué crées que tu idea es una oportunidad de negocios?</span
@@ -52,6 +52,7 @@ const handleButtonClick = (id) => {
   align-items: center;
 
   .button {
+    width: 350px;
     background: #707070;
     border: 1px solid #707070;
     height: 64px;

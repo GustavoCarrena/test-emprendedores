@@ -229,11 +229,14 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
       // await setAuthToLocalStorage(response)
       // router.replace({ name: 'home' })
       const response = {
-        username: username.value,
+        nombre: username.value,
         email: email.value,
-        phone: phone.value,
-        selectedCity: selectedCity.value,
-        selectedCheckBox:
+        celular: phone.value,
+        provincia: selectedCity.value,
+        //situacion (mandar ID)
+        //primera venta (de opcion 1, id 1 ) - Tambien mandar ID, pero como propiedad por separado
+
+        situacion:
           selectedOption.value === 'option1'
             ? { [selectedOption.value]: [selectedOption1.value] }
             : [selectedOption.value],
@@ -306,10 +309,11 @@ const resolver = yupResolver(loginFormSchema)
 
 .first-section {
   width: 100%;
-  margin-top: 40px;
+  margin-top: 50px;
   .wellcome-text {
     font-weight: 600;
     width: 90%;
+    color: #333333;
     @media (max-width: 320px) {
       font-size: 24px;
     }
@@ -324,7 +328,7 @@ const resolver = yupResolver(loginFormSchema)
   }
   .wellcome-wrapper {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 15px;
     @media (max-width: 320px) {
       display: flex;
       flex-flow: column nowrap;
@@ -454,15 +458,14 @@ const resolver = yupResolver(loginFormSchema)
 
 .form-wrapper {
   background-color: #f2f2f2;
-  margin: 5%;
+  margin: 3% 5%;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: baseline;
-
+  color: #333333;
   .first-text {
     font-weight: 700;
-
     @media (max-width: 529px) {
       width: 90%;
       font-size: 14px;

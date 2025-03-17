@@ -1,4 +1,5 @@
 <template>
+  <span class="text-gray-700">{{ data[0] }}</span>
   <div class="card flex justify-center">
     <Stepper
       class="basis-[50rem]"
@@ -159,16 +160,18 @@ import Button from 'primevue/button'
 import Stepper from 'primevue/stepper'
 import StepList from 'primevue/steplist'
 import StepPanels from 'primevue/steppanels'
-
 import Step from 'primevue/step'
 import StepPanel from 'primevue/steppanel'
 import Knob from 'primevue/knob'
 import Questions from '@/components/questions/Questions.vue'
+import { useQuestions } from '@/composables/questions.js'
 
 const active = ref(1)
 const knobValue1 = ref(1)
 const knobValue2 = ref(2)
 const knobValue3 = ref(3)
+
+const { data, isPending } = useQuestions()
 const knobValue4 = ref(4)
 
 const handleStepChange = (newIndex) => {
