@@ -1,6 +1,40 @@
 <template>
-  <div class="card flex justify-center">
+  <div v-if="!showResults" class="card flex justify-center">
     <Toast position="top-center" group="top-center" />
+    <Dialog
+      v-model:visible="dialogVisible"
+      :modal="true"
+      :closable="false"
+      :dismissableMask="false"
+      :closeOnEscape="false"
+      :style="{ width: '40vw' }"
+    >
+      <template #header>
+        <div class="flex justify-baseline items-center gap-2">
+          <i class="pi pi-check-circle" style="color: green"></i>
+          <div class="font-semibold">¡Test de Emprendedores completado!</div>
+        </div>
+      </template>
+
+      <div class="flex flex-col">
+        <div>Muchas gracias por participar</div>
+        <div>
+          Recordá que una vez finalizado el test, no podrás cambiar los
+          resultados
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <Button
+            label="Cancelar"
+            severity="secondary"
+            outlined
+            @click="dialogVisible = false"
+          />
+          <Button label="Ver resultados" @click="handleDialogAccept" />
+        </div>
+      </template>
+    </Dialog>
     <Stepper
       class="basis-[50rem]"
       :value="activeStep.toString()"
@@ -68,13 +102,14 @@
               iconPos="right"
               :loading="isPending"
               :disabled="isPending"
-              @click="handleSubmit"
+              @click="handleConfirm()"
             />
           </div>
         </StepPanel>
       </StepPanels>
     </Stepper>
   </div>
+  <ResultsView v-else />
 </template>
 
 <script setup>
@@ -85,15 +120,20 @@ import StepList from 'primevue/steplist'
 import StepPanels from 'primevue/steppanels'
 import Step from 'primevue/step'
 import StepPanel from 'primevue/steppanel'
+import Dialog from 'primevue/dialog'
+import { useToast } from 'primevue/usetoast'
 import Knob from 'primevue/knob'
 import Toast from 'primevue/toast'
 import Questions from '@/components/questions/Questions.vue'
 import { useQuestions } from '@/composables/questions.js'
-import { useToast } from 'primevue/usetoast'
+import ResultsView from './ResultsView.vue'
+import { warningMessageContent } from '@/constants/messages/messages'
 
 const { data, isPending } = useQuestions()
 const activeStep = ref(1)
 const toast = useToast()
+const showResults = ref(false)
+const dialogVisible = ref(false)
 
 const payload = ref([])
 
@@ -117,14 +157,7 @@ const steps = computed(() => {
 const handleStepChange = (step) => {
   const nextStep = Number(step)
   if (nextStep > activeStep.value && !hasSelectedAllAnswers.value) {
-    toast.add({
-      severity: 'warn',
-      summary: 'Atención',
-      detail:
-        'Debes seleccionar al menos una opción por pregunta antes de avanzar.',
-      life: 3000,
-      group: 'top-center',
-    })
+    toast.add(warningMessageContent)
     return
   }
   activeStep.value = nextStep
@@ -132,14 +165,7 @@ const handleStepChange = (step) => {
 
 const handleNavigation = (stepId) => {
   if (stepId > activeStep.value && !hasSelectedAllAnswers.value) {
-    toast.add({
-      severity: 'warn',
-      summary: 'Atención',
-      detail:
-        'Debes seleccionar al menos una opción por pregunta antes de avanzar.',
-      life: 3000,
-      group: 'top-center',
-    })
+    toast.add(warningMessageContent)
     return
   }
   activeStep.value = stepId
@@ -152,18 +178,13 @@ const handleSubmit = () => {
   })
 
   if (payload.value.length !== totalQuestions) {
-    toast.add({
-      severity: 'warn',
-      summary: 'Atención',
-      detail:
-        'Debes seleccionar al menos una opción por pregunta antes de finalizar.',
-      life: 3000,
-      group: 'top-center',
-    })
+    toast.add(warningMessageContent)
     return
   }
 
   console.log('✅ Payload final:', payload.value)
+
+  showResults.value = true
 }
 
 const hasSelectedAllAnswers = computed(() => {
@@ -176,6 +197,15 @@ const hasSelectedAllAnswers = computed(() => {
   })
   return currentStepAnswers.length === currentStepQuestions.length
 })
+
+const handleConfirm = () => {
+  dialogVisible.value = true
+}
+
+const handleDialogAccept = () => {
+  dialogVisible.value = false
+  handleSubmit()
+}
 </script>
 
 <style scoped lang="scss">
