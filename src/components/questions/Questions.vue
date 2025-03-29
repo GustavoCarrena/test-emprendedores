@@ -14,9 +14,12 @@
           <Button
             class="w-100 text-white mt-2 mb-2 button"
             :class="{
-              'selected-button': selectedButton === answer.respuesta_id,
+              'selected-button':
+                selectedButton[questions.pregunta_id] === answer.respuesta_id,
             }"
-            @click="handleButtonClick(answer.respuesta_id)"
+            @click="
+              handleButtonClick(questions.pregunta_id, answer.respuesta_id)
+            "
             ><span class="text-left button-text">
               {{ answer.texto_respuesta }}</span
             ></Button
@@ -29,16 +32,34 @@
 
 <script setup>
 import Button from 'primevue/button'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 defineProps({ data: { type: Array, default: () => [] } })
 
-const selectedButton = ref(null)
+const payloadModel = defineModel()
 
-const handleButtonClick = (id) => {
-  selectedButton.value = id
-  console.log(`Botón ${id} clickeado`)
+const selectedButton = ref({})
+
+const handleButtonClick = (questionId, answerId) => {
+  if (!Array.isArray(payloadModel.value)) {
+    payloadModel.value = []
+  }
+  payloadModel.value = [
+    ...payloadModel.value.filter(
+      (id) => id !== selectedButton.value[questionId]
+    ),
+    answerId,
+  ].sort((a, b) => a - b)
+  selectedButton.value = { ...selectedButton.value, [questionId]: answerId }
 }
+
+watch(
+  () => selectedButton,
+  () => {
+    console.log(payloadModel.value)
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <style lang="scss" scoped>

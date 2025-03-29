@@ -1,8 +1,9 @@
 <template>
   <div class="card flex justify-center">
+    <Toast position="top-center" group="top-center" />
     <Stepper
       class="basis-[50rem]"
-      value="1"
+      :value="activeStep.toString()"
       linear
       @update:value="handleStepChange"
     >
@@ -16,7 +17,7 @@
             <div class="step-content">
               <Knob
                 v-model="step.value"
-                :size="activeStep === step.id ? 100 : 80"
+                :size="activeStep === step.id ? 120 : 80"
                 readonly
                 :min="0"
                 :max="4"
@@ -35,29 +36,39 @@
         <StepPanel
           v-for="step in steps"
           :key="`panel-${step.id}`"
-          v-slot="{ activateCallback }"
           :value="step.id.toString()"
         >
-          <Questions v-if="data" :data="filteredQuestions" />
+          <Questions v-if="data" v-model="payload" :data="filteredQuestions" />
           <div
-            class="flex pt-6"
+            class="flex pt-8"
             :class="step.showBack ? 'justify-between' : 'justify-end'"
           >
             <Button
               v-if="step.showBack"
-              label="Back"
+              label="Anterior"
               severity="secondary"
               icon="pi pi-arrow-left"
               :loading="isPending"
-              @click="activateCallback((step.id - 1).toString())"
+              :disabled="isPending"
+              @click="handleNavigation(step.id - 1)"
             />
             <Button
               v-if="step.showNext"
-              label="Next"
+              label="Continuar"
               icon="pi pi-arrow-right"
               iconPos="right"
               :loading="isPending"
-              @click="activateCallback((step.id + 1).toString())"
+              :disabled="isPending"
+              @click="handleNavigation(step.id + 1)"
+            />
+            <Button
+              v-if="step.submit"
+              label="Finalizar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              :loading="isPending"
+              :disabled="isPending"
+              @click="handleSubmit"
             />
           </div>
         </StepPanel>
@@ -75,15 +86,19 @@ import StepPanels from 'primevue/steppanels'
 import Step from 'primevue/step'
 import StepPanel from 'primevue/steppanel'
 import Knob from 'primevue/knob'
+import Toast from 'primevue/toast'
 import Questions from '@/components/questions/Questions.vue'
 import { useQuestions } from '@/composables/questions.js'
-
-const activeStep = ref(1)
+import { useToast } from 'primevue/usetoast'
 
 const { data, isPending } = useQuestions()
+const activeStep = ref(1)
+const toast = useToast()
+
+const payload = ref([])
 
 const filteredQuestions = computed(() => {
-  return data.value.filter((q) => q.id === activeStep.value)
+  return data.value.filter((q) => q.id === activeStep.value) || []
 })
 
 const steps = computed(() => {
@@ -95,12 +110,72 @@ const steps = computed(() => {
     value: index + 1,
     showBack: index !== 0,
     showNext: index !== data.value.length - 1,
+    submit: index === data.value.length - 1,
   }))
 })
 
 const handleStepChange = (step) => {
-  activeStep.value = Number(step)
+  const nextStep = Number(step)
+  if (nextStep > activeStep.value && !hasSelectedAllAnswers.value) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Atención',
+      detail:
+        'Debes seleccionar al menos una opción por pregunta antes de avanzar.',
+      life: 3000,
+      group: 'top-center',
+    })
+    return
+  }
+  activeStep.value = nextStep
 }
+
+const handleNavigation = (stepId) => {
+  if (stepId > activeStep.value && !hasSelectedAllAnswers.value) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Atención',
+      detail:
+        'Debes seleccionar al menos una opción por pregunta antes de avanzar.',
+      life: 3000,
+      group: 'top-center',
+    })
+    return
+  }
+  activeStep.value = stepId
+}
+
+const handleSubmit = () => {
+  let totalQuestions = 0
+  data.value.forEach((step) => {
+    totalQuestions += step.preguntas.length
+  })
+
+  if (payload.value.length !== totalQuestions) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Atención',
+      detail:
+        'Debes seleccionar al menos una opción por pregunta antes de finalizar.',
+      life: 3000,
+      group: 'top-center',
+    })
+    return
+  }
+
+  console.log('✅ Payload final:', payload.value)
+}
+
+const hasSelectedAllAnswers = computed(() => {
+  if (!data.value || !filteredQuestions.value) return false
+  const currentStepQuestions = filteredQuestions.value[0]?.preguntas || []
+  const currentStepAnswers = payload.value.filter((answerId) => {
+    return currentStepQuestions.some((question) =>
+      question.respuestas.some((answer) => answer.respuesta_id === answerId)
+    )
+  })
+  return currentStepAnswers.length === currentStepQuestions.length
+})
 </script>
 
 <style scoped lang="scss">
@@ -115,6 +190,14 @@ const handleStepChange = (step) => {
 
 :deep(.p-stepper-separator) {
   display: none;
+}
+
+:deep(.p-toast) {
+  @media (max-width: 767px) {
+    width: 80% !important;
+    left: 5% !important;
+    right: 5% !important;
+  }
 }
 
 .step {
