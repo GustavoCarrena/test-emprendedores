@@ -1,5 +1,4 @@
 <template>
-  <span class="text-gray-700">{{ data[0] }}</span>
   <div class="card flex justify-center">
     <Stepper
       class="basis-[50rem]"
@@ -8,12 +7,16 @@
       @update:value="handleStepChange"
     >
       <StepList>
-        <Step :class="active == 1 ? 'step' : 'inactive'">
+        <Step
+          v-for="step in steps"
+          :key="step.id"
+          :class="activeStep === step.id ? 'step' : 'inactive'"
+        >
           <template #default>
             <div class="step-content">
               <Knob
-                v-model="knobValue1"
-                :size="active == 1 ? 100 : 80"
+                v-model="step.value"
+                :size="activeStep === step.id ? 100 : 80"
                 readonly
                 :min="0"
                 :max="4"
@@ -21,131 +24,40 @@
                 textColor="#3E5A7E"
               />
               <div class="flex flex-col items-baseline">
-                <span>Eje 1 de 4</span><span> Motivación y objetivos</span>
-              </div>
-            </div>
-          </template>
-        </Step>
-
-        <Step :class="active == 2 ? 'step' : 'inactive'">
-          <template #default>
-            <div class="step-content">
-              <Knob
-                v-model="knobValue2"
-                :size="active == 2 ? 100 : 80"
-                readonly
-                :min="0"
-                :max="4"
-                valueColor="#3E5A7E"
-                textColor="#3E5A7E"
-              />
-              <div class="flex flex-col items-baseline">
-                <span>Eje 2 de 4</span><span> </span>
-              </div>
-            </div>
-          </template>
-        </Step>
-
-        <Step :class="active == 3 ? 'step' : 'inactive'">
-          <template #default>
-            <div class="step-content">
-              <Knob
-                v-model="knobValue3"
-                :size="active == 3 ? 100 : 80"
-                readonly
-                :min="0"
-                :max="4"
-                valueColor="#3E5A7E"
-                textColor="#3E5A7E"
-              />
-              <div class="flex flex-col items-baseline">
-                <span>Eje 3 de 4</span><span> </span>
-              </div>
-            </div>
-          </template>
-        </Step>
-        <Step :class="active == 4 ? 'step' : 'inactive'">
-          <template #default>
-            <div class="step-content">
-              <Knob
-                v-model="knobValue4"
-                :size="active == 4 ? 100 : 80"
-                readonly
-                :min="0"
-                :max="4"
-                valueColor="#3E5A7E"
-                textColor="#3E5A7E"
-              />
-              <div class="flex flex-col items-baseline">
-                <span>Eje 4 de 4</span><span> </span>
+                <span>{{ step.title }}</span>
+                <span>{{ step.subtitle }}</span>
               </div>
             </div>
           </template>
         </Step>
       </StepList>
       <StepPanels>
-        <StepPanel v-slot="{ activateCallback }" value="1">
-          <Questions />
-          <div class="flex pt-6 justify-end">
+        <StepPanel
+          v-for="step in steps"
+          :key="`panel-${step.id}`"
+          v-slot="{ activateCallback }"
+          :value="step.id.toString()"
+        >
+          <Questions v-if="data" :data="filteredQuestions" />
+          <div
+            class="flex pt-6"
+            :class="step.showBack ? 'justify-between' : 'justify-end'"
+          >
             <Button
-              label="Next"
-              icon="pi pi-arrow-right"
-              @click="activateCallback('2')"
-            />
-          </div>
-        </StepPanel>
-        <StepPanel v-slot="{ activateCallback }" value="2">
-          Eje2
-          <div class="flex pt-6 justify-between">
-            <Button
+              v-if="step.showBack"
               label="Back"
               severity="secondary"
               icon="pi pi-arrow-left"
-              @click="activateCallback('1')"
+              :loading="isPending"
+              @click="activateCallback((step.id - 1).toString())"
             />
             <Button
-              label="Next"
-              icon="pi pi-arrow-right"
-              iconPos="right"
-              @click="activateCallback('3')"
-            />
-          </div>
-        </StepPanel>
-        <StepPanel v-slot="{ activateCallback }" value="3">
-          Eje 3
-          <div class="flex flex-col h-48">
-            <div
-              class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium"
-            ></div>
-          </div>
-          <div class="pt-6">
-            <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback('2')"
-            />
-            <Button
+              v-if="step.showNext"
               label="Next"
               icon="pi pi-arrow-right"
               iconPos="right"
-              @click="activateCallback('4')"
-            />
-          </div>
-        </StepPanel>
-        <StepPanel v-slot="{ activateCallback }" value="4">
-          Eje 4
-          <div class="flex flex-col h-48">
-            <div
-              class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium"
-            ></div>
-          </div>
-          <div class="pt-6">
-            <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback('3')"
+              :loading="isPending"
+              @click="activateCallback((step.id + 1).toString())"
             />
           </div>
         </StepPanel>
@@ -155,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Button from 'primevue/button'
 import Stepper from 'primevue/stepper'
 import StepList from 'primevue/steplist'
@@ -166,16 +78,28 @@ import Knob from 'primevue/knob'
 import Questions from '@/components/questions/Questions.vue'
 import { useQuestions } from '@/composables/questions.js'
 
-const active = ref(1)
-const knobValue1 = ref(1)
-const knobValue2 = ref(2)
-const knobValue3 = ref(3)
+const activeStep = ref(1)
 
 const { data, isPending } = useQuestions()
-const knobValue4 = ref(4)
 
-const handleStepChange = (newIndex) => {
-  active.value = newIndex
+const filteredQuestions = computed(() => {
+  return data.value.filter((q) => q.id === activeStep.value)
+})
+
+const steps = computed(() => {
+  if (!data.value || data.value.length === 0) return []
+  return data.value.map((step, index) => ({
+    id: step.id,
+    title: `Eje ${step.id} de ${data.value.length}`,
+    subtitle: step.titulo,
+    value: index + 1,
+    showBack: index !== 0,
+    showNext: index !== data.value.length - 1,
+  }))
+})
+
+const handleStepChange = (step) => {
+  activeStep.value = Number(step)
 }
 </script>
 

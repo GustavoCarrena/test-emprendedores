@@ -1,55 +1,54 @@
 <template>
-  <div class="flex justify-baseline items-start">
-    <span class="ml-1 mr-3">1.</span>
-    <span class="text-left"
-      >¿Por qué crées que tu idea es una oportunidad de negocios?</span
+  <div v-for="allQuestions in data" :key="allQuestions.pregunta_id">
+    <span
+      v-for="questions in allQuestions.preguntas"
+      :key="questions.pregunta_id"
+      class="flex flex-col justify-center items-start"
     >
-  </div>
-  <div v-for="button in buttonArray" :key="button.id" class="button-wrapper">
-    <Button
-      class="w-100 text-white mt-2 mb-2 button"
-      :class="{ 'selected-button': selectedButton === button.id }"
-      @click="handleButtonClick(button.id)"
-      ><span class="text-left button-text"> {{ button.content }}</span></Button
-    >
+      <div class="flex justify-baseline items-center">
+        <div class="ml-1 mr-3">{{ questions.pregunta_id }}</div>
+        <div class="text-left">{{ questions.texto_pregunta }}</div>
+      </div>
+      <div class="button-wrapper">
+        <div v-for="answer in questions.respuestas" :key="answer.respuesta_id">
+          <Button
+            class="w-100 text-white mt-2 mb-2 button"
+            :class="{
+              'selected-button': selectedButton === answer.respuesta_id,
+            }"
+            @click="handleButtonClick(answer.respuesta_id)"
+            ><span class="text-left button-text">
+              {{ answer.texto_respuesta }}</span
+            ></Button
+          >
+        </div>
+      </div>
+    </span>
   </div>
 </template>
 
 <script setup>
 import Button from 'primevue/button'
 import { ref } from 'vue'
-const buttonArray = [
-  {
-    id: '1.1',
-    content: 'Creo que puede tener potencial, pero necesito validar la idea',
-  },
-  {
-    id: '1.2',
-    content:
-      'Verifiqué que satisface una necesidad o deseo claro en el mercado ',
-  },
-  {
-    id: '1.3',
-    content:
-      'Quiero emprender algo, pero no tengo claro si  hay demanda o valor ',
-  },
-]
+
+defineProps({ data: { type: Array, default: () => [] } })
 
 const selectedButton = ref(null)
 
 const handleButtonClick = (id) => {
   selectedButton.value = id
   console.log(`Botón ${id} clickeado`)
-  // Aquí podrías agregar lógica para manejar la selección del usuario
 }
 </script>
 
 <style lang="scss" scoped>
 .button-wrapper {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  gap: 15px;
 
   .button {
     width: 350px;
