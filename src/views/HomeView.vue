@@ -31,7 +31,12 @@
             outlined
             @click="dialogVisible = false"
           />
-          <Button label="Ver resultados" @click="handleDialogAccept" />
+          <Button
+            label="Ver resultados"
+            :loading="isResultsPending"
+            :disabled="isResultsPending"
+            @click="handleDialogAccept"
+          />
         </div>
       </template>
     </Dialog>
@@ -109,7 +114,7 @@
       </StepPanels>
     </Stepper>
   </div>
-  <ResultsView v-else />
+  <ResultsView v-else :results :data />
 </template>
 
 <script setup>
@@ -126,15 +131,21 @@ import Knob from 'primevue/knob'
 import Toast from 'primevue/toast'
 import Questions from '@/components/questions/Questions.vue'
 import { useQuestions } from '@/composables/questions.js'
+import { useResults } from '@/composables/results.js'
 import ResultsView from './ResultsView.vue'
 import { warningMessageContent } from '@/constants/messages/messages'
 
 const { data, isPending } = useQuestions()
+const {
+  data: results,
+  isPending: isResultsPending,
+  fetchResults,
+} = useResults()
 const activeStep = ref(1)
 const toast = useToast()
-const showResults = ref(false)
+//cambiar a false
+const showResults = ref(true)
 const dialogVisible = ref(false)
-
 const payload = ref([])
 
 const filteredQuestions = computed(() => {
@@ -171,7 +182,7 @@ const handleNavigation = (stepId) => {
   activeStep.value = stepId
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   let totalQuestions = 0
   data.value.forEach((step) => {
     totalQuestions += step.preguntas.length
@@ -181,10 +192,17 @@ const handleSubmit = () => {
     toast.add(warningMessageContent)
     return
   }
-
   console.log('✅ Payload final:', payload.value)
+  await getResults()
+}
 
-  showResults.value = true
+const getResults = async () => {
+  try {
+    await fetchResults(payload.value)
+    showResults.value = true
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const hasSelectedAllAnswers = computed(() => {

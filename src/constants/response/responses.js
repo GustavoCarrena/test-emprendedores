@@ -1,9 +1,9 @@
-export const responses = {
+export const responsesMock = {
   Status: 'OK',
   data: {
     resultado_id: 1,
     titulo: 'Explorador/a del emprendimiento',
-    subtitulo: 'Vas por buen camino',
+    subtitulo: '¡Buen primer paso!',
     texto:
       'Estás en las etapas iniciales y recién estás explorando la posibilidad de emprender. Es importante que tomes este test como una guía para empezar a construir tu idea. ',
 

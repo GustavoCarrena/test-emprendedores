@@ -8,18 +8,11 @@
       />
     </div>
   </nav>
-  <div
-    class="flex justify-start"
-    style="padding-left: 7%; background-color: #3d3d3d"
-  >
-    <div class="text-xs text-white ml-2 py-1 opacity-70">
-      {{ route.name === 'login' ? 'inicio' : 'Test' }}
-    </div>
+  <div class="flex justify-start" style="background-color: #3d3d3d">
+    <div class="opacity-50" style="height: 5px" />
   </div>
 </template>
 
 <script setup>
 import Image from 'primevue/image'
-import { useRoute } from 'vue-router'
-const route = useRoute()
 </script>
