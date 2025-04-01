@@ -5,10 +5,12 @@
       <slot />
     </div>
   </main>
+  <Footer />
 </template>
 
 <script setup>
 import NavBar from '../navbar/NavBar.vue'
+import Footer from '../footer/Footer.vue'
 </script>
 
 <style scoped>

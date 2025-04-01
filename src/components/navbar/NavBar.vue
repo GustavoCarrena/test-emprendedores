@@ -1,10 +1,10 @@
 <template>
   <nav class="w-full h-18 p-0">
-    <div class="w-full h-full pt-1">
+    <div class="w-full h-full">
       <Image
         src="/src/assets/header_secretaria.svg"
         alt="Image"
-        imageStyle="padding-left:6%"
+        imageStyle="padding-left:5%; height: 75px"
       />
     </div>
   </nav>

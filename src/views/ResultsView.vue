@@ -102,17 +102,28 @@
           <div class="box-header-title">{{ recomendations.eje }}</div>
         </div>
         <div class="box-body">
-          <div class="box-body-content">
-            Buscá en la
+          <!--   <div class="box-body-content">
+       Buscá en la
             <a
-              href="https://www.argentina.gob.ar/economia/pymes-emprendedores-y-economia-del-conocimiento/capacitar/emprender"
+              :href="`${recomendations.url}`"
               target="_blank"
               class="recommendation-link"
             >
-              <span class="underline">Plataforma Capacitar</span>
+              <span class="underline">{{ recomendations.textoUrl }}</span>
+            </a> -->
+
+          <!-- {{ formatTextWithLink(recomendations) }} -->
+          <div class="box-body-content">
+            {{ splitTextWithLink(recomendations).before }}
+            <a
+              v-if="splitTextWithLink(recomendations).link"
+              :href="splitTextWithLink(recomendations).link.url"
+              target="_blank"
+              class="recommendation-link"
+            >
+              {{ splitTextWithLink(recomendations).link.text }}
             </a>
-            los cursos disponibles en los temas:
-            {{ extractVariableText(recomendations.texto) }}
+            {{ splitTextWithLink(recomendations).after }}
           </div>
         </div>
       </div>
@@ -132,6 +143,13 @@
         <div class="books-body">{{ book.autor }}</div>
       </div>
     </section>
+
+    <section class="institutions-section">
+      <div class="institutions-title">
+        Conocé las instituciones de apoyo emprendedor de tu Provincia:
+      </div>
+    </section>
+
     <section class="remember-section">
       <div
         class="remember-wrapper"
@@ -178,13 +196,20 @@ const colors = (resultado_id) => {
   if (resultado_id === 3) return '#C2185B'
   if (resultado_id === 4) return '#50B7B2'
 }
+function splitTextWithLink(item) {
+  const index = item.texto.indexOf(item.textoUrl)
+  if (index === -1) {
+    return { before: item.texto, link: null, after: '' }
+  }
 
-const extractVariableText = (htmlString) => {
-  const fullText = htmlString.replace(/<[^>]*>/g, '')
-  return fullText.replace(
-    'Buscá en la Plataforma Capacitar los cursos disponibles en los temas: ',
-    ''
-  )
+  return {
+    before: item.texto.substring(0, index),
+    link: {
+      text: item.textoUrl,
+      url: item.url,
+    },
+    after: item.texto.substring(index + item.textoUrl.length),
+  }
 }
 </script>
 
@@ -378,6 +403,23 @@ const extractVariableText = (htmlString) => {
       }
     }
   }
+
+  .institutions-section {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    .institutions-title {
+      text-align: left;
+      align-self: baseline;
+      color: #333333;
+      font-weight: 600;
+      font-size: 21px;
+      padding: 0.5rem 0 0.8rem 5%;
+    }
+  }
+
   .remember-section {
     display: flex;
     flex-flow: column nowrap;
