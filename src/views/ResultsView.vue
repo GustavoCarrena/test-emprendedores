@@ -102,17 +102,6 @@
           <div class="box-header-title">{{ recomendations.eje }}</div>
         </div>
         <div class="box-body">
-          <!--   <div class="box-body-content">
-       Buscá en la
-            <a
-              :href="`${recomendations.url}`"
-              target="_blank"
-              class="recommendation-link"
-            >
-              <span class="underline">{{ recomendations.textoUrl }}</span>
-            </a> -->
-
-          <!-- {{ formatTextWithLink(recomendations) }} -->
           <div class="box-body-content">
             {{ splitTextWithLink(recomendations).before }}
             <a
@@ -145,8 +134,23 @@
     </section>
 
     <section class="institutions-section">
-      <div class="institutions-title">
-        Conocé las instituciones de apoyo emprendedor de tu Provincia:
+      <div
+        class="institutions-wrapper"
+        :style="`border: 1px solid ${colors(results.resultado_id)}`"
+      >
+        <div class="header">
+          <span
+            >Conocé las instituciones de apoyo emprendedor de tu Provincia</span
+          >
+        </div>
+        <Divider style="margin: 0; padding: 10px 0" />
+        <a
+          href="https://www.argentina.gob.ar/economia/pymes-emprendedores-y-economia-del-conocimiento/ecosistema-emprendedor/listado-de-organizaciones"
+          target="_blank"
+          class="body"
+        >
+          <span>Ingresá aquí</span>
+        </a>
       </div>
     </section>
 
@@ -410,13 +414,34 @@ function splitTextWithLink(item) {
     align-items: center;
     justify-content: center;
     width: 100%;
-    .institutions-title {
-      text-align: left;
-      align-self: baseline;
-      color: #333333;
-      font-weight: 600;
-      font-size: 21px;
-      padding: 0.5rem 0 0.8rem 5%;
+    margin-top: 10px;
+    background-color: #fafafa;
+    .institutions-wrapper {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      padding: 2%;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid lightgray;
+      overflow: hidden;
+      box-shadow:
+        #b5b5b5 0px 2px 2px,
+        #b5b5b5 0px -2px 2px,
+        #b5b5b5 0px 2px 4px,
+        #b5b5b5 0px 10px 8px,
+        #b5b5b5 0px 0px 2px;
+      .header {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 16px;
+      }
+      .body {
+        font-weight: 800;
+        font-size: 14px;
+      }
     }
   }
 
@@ -427,6 +452,7 @@ function splitTextWithLink(item) {
     align-items: center;
     width: 90%;
     margin-left: 5%;
+    background-color: #fafafa;
     .remember-wrapper {
       padding: 3%;
       border-radius: 8px;
