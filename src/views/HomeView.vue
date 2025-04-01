@@ -1,6 +1,10 @@
 <template>
   <div v-if="!showResults" class="card flex justify-center">
-    <Toast position="top-center" group="top-center" />
+    <Toast
+      position="top-center"
+      group="top-center"
+      style="width: 70vw; max-width: 400px"
+    />
     <Dialog
       v-model:visible="dialogVisible"
       :modal="true"
@@ -53,7 +57,7 @@
           :class="activeStep === step.id ? 'step' : 'inactive'"
         >
           <template #default>
-            <div class="step-content">
+            <div class="knob-content">
               <Knob
                 v-model="step.value"
                 :size="activeStep === step.id ? 120 : 80"
@@ -63,7 +67,7 @@
                 valueColor="#3E5A7E"
                 textColor="#3E5A7E"
               />
-              <div class="flex flex-col items-baseline">
+              <div class="knob-title">
                 <span>{{ step.title }}</span>
                 <span>{{ step.subtitle }}</span>
               </div>
@@ -76,10 +80,11 @@
           v-for="step in steps"
           :key="`panel-${step.id}`"
           :value="step.id.toString()"
+          class="step-pannel"
         >
           <Questions v-if="data" v-model="payload" :data="filteredQuestions" />
           <div
-            class="flex pt-8"
+            class="flex px-8 pt-8"
             :class="step.showBack ? 'justify-between' : 'justify-end'"
           >
             <Button
@@ -144,7 +149,7 @@ const {
 const activeStep = ref(1)
 const toast = useToast()
 //cambiar a false
-const showResults = ref(true)
+const showResults = ref(false)
 const dialogVisible = ref(false)
 const payload = ref([])
 
@@ -251,18 +256,28 @@ const handleDialogAccept = () => {
 .step {
   opacity: 1.3;
   @media (max-width: 767px) {
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .step-content {
+  .knob-content {
     @media (max-width: 767px) {
       display: flex;
-      flex-flow: row nowrap;
+      flex-flow: row wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
+      gap: 0.5rem;
+      width: 95vw;
+      padding: 0 0.5rem;
+      .knob-title {
+        font-weight: 600;
+        @media (max-width: 767px) {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: center;
+          align-items: baseline;
+        }
+      }
     }
   }
 }

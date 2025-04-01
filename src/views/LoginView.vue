@@ -6,7 +6,7 @@
     class="flex flex-col justify-center items-center gap-4 first-section"
   >
     <div class="wellcome-text">
-      ¡Bienvenido/a al test para emprendedores en Argentina!
+      ¡Te damos la bienvenida al test para emprendedores!
     </div>
     <div class="wellcome-wrapper">
       <div class="flex flex-col justify-center items-center participa">
@@ -25,9 +25,6 @@
           crecer.</span
         >
       </div>
-    </div>
-    <div class="mt-4 flex justify-center items-center banner">
-      Sumá los puntos de tus respuestas y descubrí tu nivel de preparación
     </div>
   </section>
 
@@ -309,7 +306,7 @@ const resolver = yupResolver(loginFormSchema)
 
 .first-section {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 45px;
   .wellcome-text {
     font-weight: 600;
     width: 90%;
@@ -433,25 +430,6 @@ const resolver = yupResolver(loginFormSchema)
           font-size: 16px;
         }
       }
-    }
-  }
-  .banner {
-    border: 2px solid #2e7d33;
-    background: #f2faf3;
-    border-radius: 8px;
-    color: #2e7d33;
-    font-weight: 700;
-
-    @media (max-width: 1023px) {
-      width: 90%;
-      font-size: 14px;
-      padding: 2%;
-      height: 60px;
-    }
-    @media (min-width: 1024px) {
-      width: 67%;
-      font-size: 18px;
-      height: 80px;
     }
   }
 }
