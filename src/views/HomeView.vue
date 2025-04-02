@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!showResults" class="card flex justify-center">
+  <div v-if="!showResults" class="flex justify-center pt-4">
     <Toast
       position="top-center"
       group="top-center"
@@ -45,12 +45,12 @@
       </template>
     </Dialog>
     <Stepper
-      class="basis-[50rem]"
+      class="stepper"
       :value="activeStep.toString()"
       linear
       @update:value="handleStepChange"
     >
-      <StepList>
+      <StepList class="step-list">
         <Step
           v-for="step in steps"
           :key="step.id"
@@ -60,16 +60,18 @@
             <div class="knob-content">
               <Knob
                 v-model="step.value"
-                :size="activeStep === step.id ? 120 : 80"
                 readonly
                 :min="0"
                 :max="4"
+                :class="
+                  activeStep === step.id ? 'knob-active' : 'knob-inactive'
+                "
                 valueColor="#3E5A7E"
                 textColor="#3E5A7E"
               />
               <div class="knob-title">
                 <span>{{ step.title }}</span>
-                <span>{{ step.subtitle }}</span>
+                <span class="text-wrap knob-subtitle">{{ step.subtitle }}</span>
               </div>
             </div>
           </template>
@@ -80,11 +82,10 @@
           v-for="step in steps"
           :key="`panel-${step.id}`"
           :value="step.id.toString()"
-          class="step-pannel"
         >
           <Questions v-if="data" v-model="payload" :data="filteredQuestions" />
           <div
-            class="flex px-8 pt-8"
+            class="flex pt-8 buttons"
             :class="step.showBack ? 'justify-between' : 'justify-end'"
           >
             <Button
@@ -103,6 +104,7 @@
               iconPos="right"
               :loading="isPending"
               :disabled="isPending"
+              class="continue-button"
               @click="handleNavigation(step.id + 1)"
             />
             <Button
@@ -112,6 +114,7 @@
               iconPos="right"
               :loading="isPending"
               :disabled="isPending"
+              class="continue-button"
               @click="handleConfirm()"
             />
           </div>
@@ -236,11 +239,6 @@ const handleDialogAccept = () => {
   display: none;
 }
 
-:deep(.p-knob-text) {
-  background: blue;
-  color: red !important;
-}
-
 :deep(.p-stepper-separator) {
   display: none;
 }
@@ -253,39 +251,115 @@ const handleDialogAccept = () => {
   }
 }
 
-.step {
-  opacity: 1.3;
-  @media (max-width: 767px) {
+.stepper {
+  width: 85vw;
+
+  .step-list {
     display: flex;
+    flex-flow: row nowrap;
     justify-content: center;
-    align-items: center;
-  }
-  .knob-content {
-    @media (max-width: 767px) {
+    align-items: flex-start;
+    width: 100%;
+    @media (min-width: 1024px) {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .inactive {
+      opacity: 0.3;
+      width: 100%;
+
       display: flex;
-      flex-flow: row wrap;
-      justify-content: space-between;
+      flex-flow: column nowrap;
+      justify-content: center;
       align-items: center;
-      gap: 0.5rem;
-      width: 95vw;
-      padding: 0 0.5rem;
-      .knob-title {
-        font-weight: 600;
-        @media (max-width: 767px) {
+      @media (max-width: 1023px) {
+        display: none;
+      }
+      @media (min-width: 1024px) {
+        font-size: 0.6rem;
+        .knob-title {
           display: flex;
           flex-flow: column nowrap;
           justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .knob-content {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .step {
+      opacity: 1.3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+
+      @media (min-width: 1024px) {
+        width: 100%;
+      }
+      .knob-content {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.2rem;
+        width: 100%;
+        @media (min-width: 1024px) {
+          width: 100%;
+          max-width: 30vw;
+        }
+        .knob-title {
+          font-weight: 600;
+          display: flex;
+          flex-flow: column wrap;
+          justify-content: center;
           align-items: baseline;
+          @media (min-width: 768px) and (max-width: 1023px) {
+            font-size: 1.2rem;
+          }
+          @media (min-width: 1024px) {
+            align-items: center;
+            font-size: 1.1rem;
+          }
+          .knob-subtitle {
+            @media (min-width: 1024px) {
+              font-size: 1.05rem;
+            }
+          }
         }
       }
     }
   }
 }
 
-.inactive {
-  opacity: 0.3;
-  @media (max-width: 767px) {
-    display: none;
+.buttons {
+  width: 100%;
+  padding: 5%;
+  @media (min-width: 768px) and (max-width: 1023px) {
+    padding: 5% 9% 5% 5%;
+  }
+}
+
+:deep(.knob-active.p-knob) {
+  svg {
+    width: 100px !important;
+    height: 100px !important;
+    @media (min-width: 1024px) {
+      width: 120px !important;
+      height: 120px !important;
+    }
+  }
+}
+
+:deep(.knob-inactive.p-knob) {
+  svg {
+    width: 60px !important;
+    height: 60px !important;
   }
 }
 </style>

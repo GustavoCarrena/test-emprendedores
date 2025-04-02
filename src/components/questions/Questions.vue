@@ -9,9 +9,9 @@
       :key="questions.pregunta_id"
       class="question-box"
     >
-      <div class="question-text">
-        <div class="ml-1 mr-3">{{ questions.pregunta_id }}</div>
-        <div class="text-left">{{ questions.texto_pregunta }}</div>
+      <div class="question-text-wrapper">
+        <div class="question-number">{{ questions.pregunta_id }}.</div>
+        <div class="question-text">{{ questions.texto_pregunta }}</div>
       </div>
 
       <div
@@ -26,9 +26,7 @@
               selectedButton[questions.pregunta_id] === answer.respuesta_id,
           }"
           @click="handleButtonClick(questions.pregunta_id, answer.respuesta_id)"
-          ><span class="text-left button-text">
-            {{ answer.texto_respuesta }}</span
-          ></Button
+          ><span> {{ answer.texto_respuesta }}</span></Button
         >
       </div>
     </div>
@@ -72,23 +70,29 @@ watch(
   width: 100%;
   .question-box {
     padding: 5px 0;
-    @media (max-width: 529px) {
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-    .question-text {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    .question-text-wrapper {
       display: flex;
       flex-flow: row nowrap;
       justify-content: baseline;
       align-items: baseline;
-      width: 100%;
-      font-weight: 600;
+      width: 85%;
+      font-weight: 800;
       padding: 5px 0;
-      @media (max-width: 529px) {
-        font-size: 0.9rem;
+      font-size: 0.9rem;
+      @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: 1.05rem;
+      }
+      .question-number {
+        margin-left: -1.2rem;
+        margin-right: 0.7rem;
+      }
+      .question-text {
+        text-align: left;
       }
     }
 
@@ -99,21 +103,31 @@ watch(
       align-items: center;
       width: 85%;
       gap: 15px;
+      @media (min-width: 768px) and (max-width: 1023px) {
+        // width: 80%;
+        align-items: left;
+        padding-right: 5%;
+      }
 
       .button {
         background: #707070 !important;
         border: 1px solid #707070 !important;
         height: 64px;
         width: 100%;
-        font-size: 14px;
+        font-size: 0.75rem;
         &.selected-button,
         &:active,
         &:hover {
           background: #3e5a7e !important;
           border: 1px solid #3e5a7e !important;
         }
-        @media (max-width: 529px) {
-          font-size: 0.8rem;
+        @media (min-width: 768px) and (max-width: 1023px) {
+          font-size: 0.9rem;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: left;
+          text-align: center;
         }
       }
     }
