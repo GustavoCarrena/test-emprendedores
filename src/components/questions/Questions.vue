@@ -67,7 +67,10 @@ watch(
 
 <style lang="scss" scoped>
 .question-wrapper {
-  width: 100%;
+  width: 90vw;
+  @media (min-width: 768px) and (max-width: 1023px) {
+    width: 75vw;
+  }
   .question-box {
     padding: 5px 0;
     display: flex;
@@ -80,19 +83,21 @@ watch(
       flex-flow: row nowrap;
       justify-content: baseline;
       align-items: baseline;
-      width: 85%;
+      width: 100%;
       font-weight: 800;
       padding: 5px 0;
       font-size: 0.9rem;
+
       @media (min-width: 768px) and (max-width: 1023px) {
-        font-size: 1.05rem;
+        font-size: 1.15rem;
       }
       .question-number {
-        margin-left: -1.2rem;
-        margin-right: 0.7rem;
+        margin-left: -0.8rem;
+        margin-right: 0.8rem;
       }
       .question-text {
         text-align: left;
+        width: 95%;
       }
     }
 
@@ -101,20 +106,24 @@ watch(
       flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
-      width: 85%;
+      width: 100%;
       gap: 15px;
       @media (min-width: 768px) and (max-width: 1023px) {
-        // width: 80%;
         align-items: left;
         padding-right: 5%;
       }
 
       .button {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: left;
         background: #707070 !important;
         border: 1px solid #707070 !important;
-        height: 64px;
+        height: 75px;
         width: 100%;
-        font-size: 0.75rem;
+        font-size: 0.82rem;
+        text-align: left;
         &.selected-button,
         &:active,
         &:hover {
@@ -122,12 +131,8 @@ watch(
           border: 1px solid #3e5a7e !important;
         }
         @media (min-width: 768px) and (max-width: 1023px) {
-          font-size: 0.9rem;
-          display: flex;
-          flex-flow: row nowrap;
-          align-items: center;
-          justify-content: left;
-          text-align: center;
+          font-size: 1rem;
+          // text-align: center;
         }
       }
     }

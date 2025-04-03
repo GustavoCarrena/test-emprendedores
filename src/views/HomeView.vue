@@ -69,8 +69,10 @@
                 valueColor="#3E5A7E"
                 textColor="#3E5A7E"
               />
+
               <div class="knob-title">
                 <span>{{ step.title }}</span>
+
                 <span class="text-wrap knob-subtitle">{{ step.subtitle }}</span>
               </div>
             </div>
@@ -252,7 +254,7 @@ const handleDialogAccept = () => {
 }
 
 .stepper {
-  width: 85vw;
+  width: 90vw;
 
   .step-list {
     display: flex;
@@ -313,6 +315,10 @@ const handleDialogAccept = () => {
           width: 100%;
           max-width: 30vw;
         }
+        .knob-icon {
+          width: 30px;
+          padding-right: 5px;
+        }
         .knob-title {
           font-weight: 600;
           display: flex;
@@ -338,8 +344,8 @@ const handleDialogAccept = () => {
 }
 
 .buttons {
-  width: 100%;
-  padding: 5%;
+  width: 90vw;
+  padding: 5% 0;
   @media (min-width: 768px) and (max-width: 1023px) {
     padding: 5% 9% 5% 5%;
   }
