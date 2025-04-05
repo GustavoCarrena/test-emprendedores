@@ -11,7 +11,8 @@
       :closable="false"
       :dismissableMask="false"
       :closeOnEscape="false"
-      :style="{ width: '40vw' }"
+      :style="{ width: '70vw', 'max-width': '500px' }"
+      contentClass="flex justify-between items-center !w-full"
     >
       <template #header>
         <div class="flex justify-baseline items-center gap-2">
@@ -20,25 +21,27 @@
         </div>
       </template>
 
-      <div class="flex flex-col">
-        <div>Muchas gracias por participar</div>
+      <div class="flex flex-col text-sm">
+        <div class="pb-2">Muchas gracias por participar</div>
         <div>
           Recordá que una vez finalizado el test, no podrás cambiar los
           resultados
         </div>
       </div>
       <template #footer>
-        <div class="flex justify-end gap-2">
+        <div class="flex justify-between items-center w-full gap-2">
           <Button
             label="Cancelar"
             severity="secondary"
             outlined
+            size="small"
             @click="dialogVisible = false"
           />
           <Button
             label="Ver resultados"
             :loading="isResultsPending"
             :disabled="isResultsPending"
+            size="small"
             @click="handleDialogAccept"
           />
         </div>
@@ -58,17 +61,45 @@
         >
           <template #default>
             <div class="knob-content">
-              <Knob
-                v-model="step.value"
-                readonly
-                :min="0"
-                :max="4"
-                :class="
-                  activeStep === step.id ? 'knob-active' : 'knob-inactive'
+              <div
+                v-if="completedSteps?.includes(step.id)"
+                style="
+                  background-color: green;
+                  width: 65px;
+                  height: 65px;
+                  border-radius: 50%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin-bottom: 10px;
                 "
-                valueColor="#3E5A7E"
-                textColor="#3E5A7E"
-              />
+              >
+                <i
+                  class="pi pi-check"
+                  style="color: whitesmoke; font-size: 1.5rem; font-weight: 800"
+                ></i>
+              </div>
+              <div v-else class="knob-wrapper">
+                <Knob
+                  v-model="step.value"
+                  readonly
+                  :min="0"
+                  :max="4"
+                  :class="
+                    activeStep === step.id ? 'knob-active' : 'knob-inactive'
+                  "
+                  valueColor="#3E5A7E"
+                  textColor="#3E5A7E"
+                  :showValue="false"
+                />
+                <div class="knob-image-container">
+                  <img
+                    :src="stepsImages(step.value)"
+                    alt="Step"
+                    class="knob-image"
+                  />
+                </div>
+              </div>
 
               <div class="knob-title">
                 <span>{{ step.title }}</span>
@@ -80,6 +111,24 @@
         </Step>
       </StepList>
       <StepPanels>
+        <div
+          v-for="step in steps"
+          :key="`panel-${step.id}`"
+          class="text-wrap step-subtitle"
+        >
+          <div
+            v-if="step.id == activeStep"
+            class="flex justify-baseline items-center"
+          >
+            <span>
+              <img
+                :src="stepsImages(step.value)"
+                alt="Step"
+                class="knob-image pr-2"
+            /></span>
+            {{ step.subtitle }}
+          </div>
+        </div>
         <StepPanel
           v-for="step in steps"
           :key="`panel-${step.id}`"
@@ -99,6 +148,7 @@
               :disabled="isPending"
               @click="handleNavigation(step.id - 1)"
             />
+
             <Button
               v-if="step.showNext"
               label="Continuar"
@@ -109,6 +159,7 @@
               class="continue-button"
               @click="handleNavigation(step.id + 1)"
             />
+
             <Button
               v-if="step.submit"
               label="Finalizar"
@@ -144,6 +195,11 @@ import { useQuestions } from '@/composables/questions.js'
 import { useResults } from '@/composables/results.js'
 import ResultsView from './ResultsView.vue'
 import { warningMessageContent } from '@/constants/messages/messages'
+import step1Image from '@/assets/step-1.svg'
+import step2Image from '@/assets/step-2.svg'
+import step3Image from '@/assets/step-3.svg'
+import step4Image from '@/assets/step-4.svg'
+import 'primeicons/primeicons.css'
 
 const { data, isPending } = useQuestions()
 const {
@@ -155,8 +211,15 @@ const activeStep = ref(1)
 const toast = useToast()
 //cambiar a false
 const showResults = ref(false)
-const dialogVisible = ref(false)
+const dialogVisible = ref(true)
 const payload = ref([])
+
+const stepsImages = (step) => {
+  if (step == 1) return step1Image
+  if (step == 2) return step2Image
+  if (step == 3) return step3Image
+  if (step == 4) return step4Image
+}
 
 const filteredQuestions = computed(() => {
   return data.value.filter((q) => q.id === activeStep.value) || []
@@ -179,17 +242,21 @@ const handleStepChange = (step) => {
   const nextStep = Number(step)
   if (nextStep > activeStep.value && !hasSelectedAllAnswers.value) {
     toast.add(warningMessageContent)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
   activeStep.value = nextStep
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 const handleNavigation = (stepId) => {
   if (stepId > activeStep.value && !hasSelectedAllAnswers.value) {
     toast.add(warningMessageContent)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
   activeStep.value = stepId
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 const handleSubmit = async () => {
@@ -228,12 +295,27 @@ const hasSelectedAllAnswers = computed(() => {
 
 const handleConfirm = () => {
   dialogVisible.value = true
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 const handleDialogAccept = () => {
   dialogVisible.value = false
   handleSubmit()
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+const completedSteps = computed(() => {
+  if (!data.value || payload.value.length === 0) return []
+  return data.value
+    .filter((step) =>
+      step.preguntas.every((question) =>
+        question.respuestas.some((res) =>
+          payload.value.includes(res.respuesta_id)
+        )
+      )
+    )
+    .map((step) => step.id)
+})
 </script>
 
 <style scoped lang="scss">
@@ -254,8 +336,11 @@ const handleDialogAccept = () => {
 }
 
 .stepper {
-  width: 90vw;
-
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
   .step-list {
     display: flex;
     flex-flow: row nowrap;
@@ -267,7 +352,7 @@ const handleDialogAccept = () => {
       margin-bottom: 15px;
     }
     .inactive {
-      opacity: 0.3;
+      opacity: 0.75;
       width: 100%;
 
       display: flex;
@@ -278,7 +363,7 @@ const handleDialogAccept = () => {
         display: none;
       }
       @media (min-width: 1024px) {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         .knob-title {
           display: flex;
           flex-flow: column nowrap;
@@ -297,6 +382,7 @@ const handleDialogAccept = () => {
     .step {
       opacity: 1.3;
       display: flex;
+      flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
       padding: 0;
@@ -306,7 +392,7 @@ const handleDialogAccept = () => {
       }
       .knob-content {
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: column wrap;
         justify-content: center;
         align-items: center;
         gap: 0.2rem;
@@ -324,7 +410,7 @@ const handleDialogAccept = () => {
           display: flex;
           flex-flow: column wrap;
           justify-content: center;
-          align-items: baseline;
+          align-items: center;
           @media (min-width: 768px) and (max-width: 1023px) {
             font-size: 1.2rem;
           }
@@ -333,13 +419,25 @@ const handleDialogAccept = () => {
             font-size: 1.1rem;
           }
           .knob-subtitle {
-            @media (min-width: 1024px) {
-              font-size: 1.05rem;
-            }
+            color: #3e5a7e;
+            font-size: 0.8rem;
           }
         }
       }
     }
+  }
+}
+
+.step-subtitle {
+  display: none;
+  @media (min-width: 767px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85vw;
+    color: #3e5a7e;
+    font-weight: 800;
+    font-size: 1.95rem;
   }
 }
 
@@ -351,21 +449,47 @@ const handleDialogAccept = () => {
   }
 }
 
-:deep(.knob-active.p-knob) {
+.knob-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.knob-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:deep(.p-knob) {
+  .knob-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+  }
+
+  .knob-image,
   svg {
-    width: 100px !important;
-    height: 100px !important;
-    @media (min-width: 1024px) {
-      width: 120px !important;
-      height: 120px !important;
-    }
+    width: 70px;
+    height: 70px;
   }
 }
 
-:deep(.knob-inactive.p-knob) {
-  svg {
-    width: 60px !important;
-    height: 60px !important;
-  }
+:deep(.p-steppanels) {
+  width: initial;
+}
+
+:deep(.p-dialog-footer) {
+  padding: 1px 0 !important;
+  width: 100%;
+  background-color: aquamarine;
 }
 </style>
