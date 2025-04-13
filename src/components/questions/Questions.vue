@@ -98,22 +98,25 @@ watch(
     .question-text-wrapper {
       display: flex;
       flex-flow: row nowrap;
-      justify-content: baseline;
+      justify-content: flex-start;
       align-items: baseline;
       width: 100%;
       font-weight: 800;
       padding: 5px 0;
-      font-size: 0.9rem;
+      font-size: 0.94rem;
+      margin-top: 10px;
       @media (min-width: 768px) {
-        font-size: 0.97rem;
+        font-size: 1.15rem;
       }
       .question-number {
-        // margin-left: -0.8rem;
         margin-right: 0.4rem;
       }
       .question-text {
         text-align: left;
         width: 95%;
+        @media (min-width: 1440px) {
+          width: 100%;
+        }
       }
     }
 
@@ -153,8 +156,8 @@ watch(
             border: 1px solid #3e5a7e !important;
           }
           @media (min-width: 1024px) {
-            height: 120px;
-            font-size: 0.85rem;
+            height: 130px;
+            font-size: 1rem;
             padding: 2%;
           }
         }

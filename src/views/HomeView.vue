@@ -114,7 +114,7 @@
         <div
           v-for="step in steps"
           :key="`panel-${step.id}`"
-          class="text-wrap step-subtitle"
+          class="step-subtitle"
         >
           <div
             v-if="step.id == activeStep"
@@ -168,14 +168,16 @@
               :loading="isPending"
               :disabled="isPending"
               class="continue-button"
-              @click="handleConfirm()"
+              @click="handleConfirm(step.id + 1)"
             />
           </div>
         </StepPanel>
       </StepPanels>
     </Stepper>
   </div>
-  <ResultsView v-else :results :data />
+  <div v-else class="w-full flex flex-col justify-baseline items-center">
+    <ResultsView :results :data />
+  </div>
 </template>
 
 <script setup>
@@ -211,7 +213,7 @@ const activeStep = ref(1)
 const toast = useToast()
 //cambiar a false
 const showResults = ref(false)
-const dialogVisible = ref(true)
+const dialogVisible = ref(false)
 const payload = ref([])
 
 const stepsImages = (step) => {
@@ -293,9 +295,15 @@ const hasSelectedAllAnswers = computed(() => {
   return currentStepAnswers.length === currentStepQuestions.length
 })
 
-const handleConfirm = () => {
-  dialogVisible.value = true
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+const handleConfirm = (stepId) => {
+  if (stepId > activeStep.value && !hasSelectedAllAnswers.value) {
+    toast.add(warningMessageContent)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  } else {
+    dialogVisible.value = true
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
 const handleDialogAccept = () => {
@@ -352,7 +360,7 @@ const completedSteps = computed(() => {
       margin-bottom: 15px;
     }
     .inactive {
-      opacity: 0.75;
+      opacity: 0.35;
       width: 100%;
 
       display: flex;
@@ -397,6 +405,7 @@ const completedSteps = computed(() => {
         align-items: center;
         gap: 0.2rem;
         width: 100%;
+
         @media (min-width: 1024px) {
           width: 100%;
           max-width: 30vw;
@@ -411,16 +420,23 @@ const completedSteps = computed(() => {
           flex-flow: column wrap;
           justify-content: center;
           align-items: center;
-          @media (min-width: 768px) and (max-width: 1023px) {
-            font-size: 1.2rem;
+          font-size: 1.1rem;
+          @media (min-width: 768px) {
+            font-size: 1.3rem;
           }
           @media (min-width: 1024px) {
             align-items: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
           }
           .knob-subtitle {
             color: #3e5a7e;
-            font-size: 0.8rem;
+            font-size: 1.2rem;
+            @media (min-width: 768px) and (max-width: 1023px) {
+              display: none;
+            }
+            @media (min-width: 1024px) {
+              font-size: 1rem;
+            }
           }
         }
       }
@@ -434,10 +450,18 @@ const completedSteps = computed(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 85vw;
+    width: 100%;
     color: #3e5a7e;
     font-weight: 800;
-    font-size: 1.95rem;
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+  }
+  @media (min-width: 1024px) {
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+  @media (min-width: 1439px) {
+    font-size: 2.6rem;
   }
 }
 
@@ -445,7 +469,10 @@ const completedSteps = computed(() => {
   width: 90vw;
   padding: 5% 0;
   @media (min-width: 768px) and (max-width: 1023px) {
-    padding: 5% 9% 5% 5%;
+    padding: 5% 2% 5% 2%;
+  }
+  @media (min-width: 1024px) {
+    padding: 5% 3% 5% 3%;
   }
 }
 

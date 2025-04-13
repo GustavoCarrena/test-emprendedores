@@ -164,7 +164,7 @@
         </div>
 
         <Button
-          class="mb-4 button-style"
+          class="my-6 w-48 button-style"
           type="Submit"
           :loading="isPending"
           label="Comenzar"

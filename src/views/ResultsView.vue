@@ -124,7 +124,7 @@
         <div class="books-header">
           <i
             class="pi pi-book book-image"
-            :style="`font-size: 1.2rem; color:${colors(results.resultado_id)}`"
+            :style="`color:${colors(results.resultado_id)}`"
           ></i
           ><span>{{ book.nombre }}</span>
         </div>
@@ -183,6 +183,7 @@ import 'primeicons/primeicons.css'
 import Divider from 'primevue/divider'
 import Button from 'primevue/button'
 import router from '@/router'
+import { onMounted } from 'vue'
 
 //Descomentar cuando termine de mockear
 // const props = defineProps({
@@ -215,6 +216,10 @@ function splitTextWithLink(item) {
     after: item.texto.substring(index + item.textoUrl.length),
   }
 }
+
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
 </script>
 
 <style lang="scss" scoped>
@@ -222,25 +227,52 @@ function splitTextWithLink(item) {
   background-color: #f2f2f2;
   color: #333333;
   width: 100%;
-
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
   .title-section {
     padding-top: 1rem;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
+    @media (min-width: 768px) {
+      width: 85%;
+    }
     .title {
       color: #242c4f;
       font-size: 24px;
       width: 90%;
+      @media (min-width: 768px) {
+        font-size: 32px;
+      }
+      @media (min-width: 1024px) {
+        font-size: 36px;
+      }
+      @media (min-width: 1440px) {
+        font-size: 40px;
+      }
     }
     .image {
-      width: 90%;
+      width: 70%;
+      @media (min-width: 500px) {
+        width: 50%;
+      }
+      @media (min-width: 768px) {
+        width: 45%;
+      }
     }
     .title-text {
       .text {
         font-weight: 700;
         font-size: 26px;
+        @media (min-width: 1024px) {
+          font-size: 32px;
+        }
+        @media (min-width: 1440px) {
+          font-size: 36px;
+        }
       }
     }
     .box-wrapper {
@@ -250,19 +282,36 @@ function splitTextWithLink(item) {
       margin-top: 10px;
       padding: 5%;
       background-color: #fafafa;
+      @media (min-width: 1024px) {
+        width: 85%;
+        padding: 2% 11rem;
+      }
+      @media (min-width: 1400px) {
+        padding: 2% 19rem;
+      }
       .circle {
         border-radius: 50%;
         width: 70px;
         height: 70px;
         padding: 40px;
+        @media (min-width: 1024px) {
+          width: 100px;
+          height: 100px;
+        }
 
         .circle-number {
           font-weight: 900;
           font-size: 25px;
+          @media (min-width: 1024px) {
+            font-size: 30px;
+          }
         }
         .circle-text {
           font-size: 15px;
           font-weight: 500;
+          @media (min-width: 1024px) {
+            font-size: 20px;
+          }
         }
       }
     }
@@ -271,6 +320,11 @@ function splitTextWithLink(item) {
       font-size: 15px;
       text-align: left;
       width: 90%;
+      @media (min-width: 1024px) {
+        width: 85%;
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
     }
   }
 
@@ -280,6 +334,9 @@ function splitTextWithLink(item) {
     align-items: center;
     justify-content: center;
     width: 100%;
+    @media (min-width: 768px) {
+      width: 80%;
+    }
 
     .suggestions-wrapper {
       display: flex;
@@ -293,13 +350,22 @@ function splitTextWithLink(item) {
         font-weight: 600;
         font-size: 21px;
         padding-bottom: 0.5rem;
+        @media (min-width: 1024px) {
+          font-size: 24px;
+        }
       }
       .suggestions-items {
         text-align: left;
         padding-bottom: 0.4rem;
         font-size: 13px;
+        @media (min-width: 1024px) {
+          font-size: 16px;
+        }
         .icon-check {
           font-size: 10px;
+          @media (min-width: 1024px) {
+            font-size: 14px;
+          }
         }
       }
     }
@@ -311,7 +377,12 @@ function splitTextWithLink(item) {
     align-items: center;
     justify-content: center;
     width: 100%;
-
+    @media (min-width: 768px) {
+      width: 85%;
+    }
+    @media (min-width: 1024px) {
+      width: 80%;
+    }
     .stronger-title {
       text-align: left;
       align-self: baseline;
@@ -319,6 +390,10 @@ function splitTextWithLink(item) {
       font-weight: 600;
       font-size: 21px;
       padding: 0.5rem 0 0.8rem 5%;
+      @media (min-width: 1024px) {
+        font-size: 24px;
+        margin-top: 15px;
+      }
     }
     .box-wrapper {
       display: flex;
@@ -338,6 +413,9 @@ function splitTextWithLink(item) {
           height: max-content;
           padding: 10px 7px;
           font-size: 14px;
+          @media (min-width: 1024px) {
+            font-size: 17px;
+          }
         }
       }
       .box-body {
@@ -347,6 +425,9 @@ function splitTextWithLink(item) {
           font-size: 12px;
           text-align: left;
           padding: 10px;
+          @media (min-width: 1024px) {
+            font-size: 13.5px;
+          }
         }
       }
     }
@@ -358,6 +439,14 @@ function splitTextWithLink(item) {
     align-items: center;
     justify-content: center;
     width: 100%;
+
+    @media (min-width: 768px) {
+      width: 75%;
+      margin-bottom: 35px;
+      @media (min-width: 1024px) {
+        width: 72%;
+      }
+    }
     .books-title {
       text-align: left;
       align-self: baseline;
@@ -365,6 +454,15 @@ function splitTextWithLink(item) {
       font-weight: 600;
       font-size: 21px;
       padding: 0.5rem 0 0.8rem 5%;
+      @media (min-width: 768px) {
+        padding: 0.5rem 0 0.8rem 0;
+        align-self: center;
+      }
+      @media (min-width: 1024px) {
+        align-self: baseline;
+        font-size: 24px;
+        margin-top: 10px;
+      }
     }
     .books-wrapper {
       display: flex;
@@ -382,6 +480,9 @@ function splitTextWithLink(item) {
         #b5b5b5 0px 2px 4px,
         #b5b5b5 0px 10px 8px,
         #b5b5b5 0px 0px 2px;
+      @media (min-width: 1024px) {
+        width: 100%;
+      }
 
       .books-header {
         width: 100%;
@@ -391,8 +492,15 @@ function splitTextWithLink(item) {
         align-items: center;
         justify-content: center;
         padding: 2%;
+        @media (min-width: 1024px) {
+          font-size: 17.5px;
+        }
         .book-image {
           margin-bottom: 5px;
+          font-size: 1.4rem;
+          @media (min-width: 1024px) {
+            font-size: 1.75rem;
+          }
         }
       }
       .books-body {
@@ -404,6 +512,9 @@ function splitTextWithLink(item) {
         font-size: 13px;
         background-color: rgb(227, 227, 227);
         width: 100%;
+        @media (min-width: 1024px) {
+          font-size: 14px;
+        }
       }
     }
   }
@@ -415,7 +526,9 @@ function splitTextWithLink(item) {
     justify-content: center;
     width: 100%;
     margin-top: 10px;
-    background-color: #fafafa;
+    @media (min-width: 768px) {
+      width: 85%;
+    }
     .institutions-wrapper {
       display: flex;
       flex-flow: column nowrap;
@@ -437,6 +550,9 @@ function splitTextWithLink(item) {
         font-weight: 600;
         margin-bottom: 5px;
         font-size: 16px;
+        @media (min-width: 1024px) {
+          font-size: 22px;
+        }
       }
       .body {
         font-weight: 800;
@@ -450,9 +566,10 @@ function splitTextWithLink(item) {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    width: 90%;
-    margin-left: 5%;
-    background-color: #fafafa;
+    width: 100%;
+    @media (min-width: 768px) {
+      width: 85%;
+    }
     .remember-wrapper {
       padding: 3%;
       border-radius: 8px;
@@ -460,9 +577,9 @@ function splitTextWithLink(item) {
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
-      background-color: #fafafa;
       margin: 10px 0;
       text-align: left;
+      width: 90%;
       box-shadow:
         #b5b5b5 0px 2px 2px,
         #b5b5b5 0px -2px 2px,
@@ -473,10 +590,16 @@ function splitTextWithLink(item) {
         font-weight: 600;
         margin-bottom: 5px;
         font-size: 16px;
+        @media (min-width: 1024px) {
+          font-size: 22px;
+        }
       }
       .body {
         font-weight: 400;
         font-size: 13px;
+        @media (min-width: 1024px) {
+          font-size: 15px;
+        }
       }
     }
   }
