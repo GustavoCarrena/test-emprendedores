@@ -1,6 +1,6 @@
 export const responsesMock = {
   data: {
-    resultado_id: 1,
+    resultado_id: 2,
     titulo: 'Explorador/a del emprendimiento',
     subtitulo: '¡Buen primer paso!',
     texto:
