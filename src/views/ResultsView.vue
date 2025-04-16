@@ -16,7 +16,7 @@
     </section>
 
     <Teleport to="body">
-      <div v-if="showPDF" ref="pdfContainer" class="pdf-print-container">
+      <div v-if="showPDF" ref="pdfContainer">
         <ResultsPDF ref="pdfComponent" :results="results" />
       </div>
     </Teleport>
