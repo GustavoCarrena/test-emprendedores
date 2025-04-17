@@ -1,49 +1,104 @@
 <template>
-  <div class="-mt-1.5 -ml-2.5">
-    <Image
-      src="/src/assets/header_secretaria.svg"
-      alt="Image"
-      imageStyle="height: 55px"
-    />
+  <!-- Contenido completo de la primera página -->
+  <div
+    class="h-full flex flex-col justify-baseline items-baseline mb-4"
+    style="height: 275mm; border: 1px solid blue"
+  >
+    <div class="header">
+      <img
+        src="/src/assets/header_secretaria.svg"
+        alt="Encabezado"
+        class="header-img"
+      />
+    </div>
+    <div class="p-2">
+      <TitleSection :results />
+    </div>
+    <div class="p-2">
+      <div class="text-xs w-full">
+        A continuación podrás visualizar el resultado por pregunta en cada uno
+        de los ejes :
+      </div>
+      <EjeUno :data="data[0]" />
+    </div>
   </div>
 
-  <div class="pdf-document flex flex-col justify-baseline items-baseline pt-2">
-    <!-- <TitleSection :results /> -->
-    <div class="">Imagen</div>
-    <div>Y</div>
-    <h1>Resultados</h1>
+  <div
+    class="h-full flex flex-col justify-baseline items-baseline"
+    style="height: 275mm; border: 1px solid blue"
+  >
+    <div class="header-2">
+      <img
+        src="/src/assets/header_secretaria.svg"
+        alt="Encabezado"
+        class="header-img"
+      />
+    </div>
+    <div class="p-2">
+      <!-- <h1>Resultados - Hoja 2</h1> -->
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido -</div>
+      <div>Contenido -</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido -</div>
+      <div>Contenido -</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+      <div>Contenido - Hoja 1</div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { Image } from 'primevue'
-// import TitleSection from './components/TitleSection.vue'
-defineProps({
-  results: {
-    type: Object,
-    required: true,
-  },
-})
+import { responsesMock } from '@/constants/response/responses'
+import TitleSection from './components/print-results/TitleSection.vue'
+import EjeUno from './components/print-results/EjeUno.vue'
+import { useQuestions } from '@/composables/questions.js'
+
+//Descomentar cuando termine de mockear
+// const props = defineProps({
+//  results: { type: Object, default: () => {} },
+
+// })
+
+const results = responsesMock.data
+
+const { data, isPending } = useQuestions()
 </script>
 
-<style lang="scss">
-.pdf-document {
-  width: 210mm;
-  height: 297mm;
-  color: black;
-  margin-left: 5px;
+<style scoped>
+.header {
+  margin-bottom: 10px; /* Espacio después del encabezado */
 }
 
+.header-2 {
+  margin-bottom: 10px; /* Espacio después del encabezado */
+  /* margin-top: 80px; */
+}
+
+.header-img {
+  height: 50px;
+}
+
+/* Elimina TODOS los saltos de página */
 @media print {
-  @page {
-    size: A4;
-    margin: 0;
-  }
-  body {
-    background: white !important;
-  }
-  .pdf-document {
-    padding: 0;
+  /* body,
+  .single-page {
+    height: auto !important;
+    overflow: visible !important;
+  } */
+  .page-break {
+    display: none !important; /* Elimina clases de salto */
   }
 }
 </style>
