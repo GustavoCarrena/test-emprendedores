@@ -183,6 +183,7 @@ import {
   setAuthToLocalStorage,
   deleteAuthFromLocalStorage,
 } from '@/helpers/auth'
+import { deleteAnswersFromLocalStorage } from '@/helpers/answers.js'
 import { loginFormSchema } from '@/helpers/validations'
 import { showError } from '@/helpers/toast.js'
 import { Form } from '@primevue/forms'
@@ -248,6 +249,7 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
       //   toast
       // )
       // deleteAuthFromLocalStorage()
+      // deleteAnswersFromLocalStorage()
     }
   }
 }
@@ -256,6 +258,7 @@ const resolver = yupResolver(loginFormSchema)
 
 // onMounted(() => {
 //   deleteAuthFromLocalStorage()
+// deleteAnswersFromLocalStorage()
 // })
 </script>
 

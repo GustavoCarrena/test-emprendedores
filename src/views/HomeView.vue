@@ -202,6 +202,10 @@ import step2Image from '@/assets/step-2.svg'
 import step3Image from '@/assets/step-3.svg'
 import step4Image from '@/assets/step-4.svg'
 import 'primeicons/primeicons.css'
+import {
+  setAnswersToLocalStorage,
+  deleteAnswersFromLocalStorage,
+} from '@/helpers/answers.js'
 
 const { data, isPending } = useQuestions()
 const {
@@ -272,6 +276,7 @@ const handleSubmit = async () => {
     return
   }
   console.log('✅ Payload final:', payload.value)
+  setAnswersToLocalStorage(payload.value)
   await getResults()
 }
 
@@ -281,6 +286,7 @@ const getResults = async () => {
     showResults.value = true
   } catch (error) {
     console.log(error)
+    deleteAnswersFromLocalStorage()
   }
 }
 
@@ -313,7 +319,10 @@ const handleDialogAccept = () => {
 }
 
 const completedSteps = computed(() => {
-  if (!data.value || payload.value.length === 0) return []
+  if (!data.value || payload.value.length === 0) {
+    deleteAnswersFromLocalStorage()
+    return []
+  }
   return data.value
     .filter((step) =>
       step.preguntas.every((question) =>

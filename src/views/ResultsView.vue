@@ -14,18 +14,19 @@
         @click="generatePDF"
       />
     </section>
-
-    <Teleport to="body">
-      <div v-if="showPDF" ref="pdfContainer">
-        <ResultsPDF ref="pdfComponent" :results="results" />
+    <div v-if="loading" class="loading-overlay">
+      <ProgressSpinner />
+    </div>
+    <Teleport v-if="showPDF" to="body">
+      <div ref="pdfContainer">
+        <ResultsPDF ref="pdfComponent" :results :answers />
       </div>
     </Teleport>
   </div>
 </template>
 
 <script setup>
-//quitar cuando se termine de mockear
-import { responsesMock } from '@/constants/response/responses'
+import ProgressSpinner from 'primevue/progressspinner'
 import 'primeicons/primeicons.css'
 import Button from 'primevue/button'
 import router from '@/router'
@@ -37,52 +38,70 @@ import SuggestionsSection from './components/results/SuggestionsSection.vue'
 import InstitutionsSection from './components/results/InstitutionsSection.vue'
 import StrongerSection from './components/results/StrongerSection.vue'
 import BooksSection from './components/results/BooksSection.vue'
+import { getAnswersFromLocalStorage } from '@/helpers/answers.js'
 
-//Descomentar cuando termine de mockear
-// const props = defineProps({
-//  results: { type: Object, default: () => {} },
+defineProps({
+  results: { type: Object, default: () => {} },
+})
 
-// })
-
-const results = responsesMock.data
-
+const answers = ref([])
+const loading = ref(false)
 const showPDF = ref(false)
 const pdfContainer = ref(null)
 
 const generatePDF = async () => {
+  loading.value = true
   showPDF.value = true
-
-  await nextTick()
-
-  const opt = {
-    margin: 10,
-    filename: 'resultados_emprendedor.pdf',
-    image: { type: 'jpeg', quality: 0.99 },
-    html2canvas: {
-      scale: 6,
-      logging: true,
-      useCORS: true,
-      allowTaint: true,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: 800,
-    },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  try {
+    await nextTick()
+    const opt = {
+      margin: 10,
+      filename: 'resultados_emprendedor.pdf',
+      image: { type: 'jpeg', quality: 0.99 },
+      html2canvas: {
+        scale: 6,
+        logging: true,
+        useCORS: true,
+        allowTaint: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 800,
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    }
+    await html2pdf().set(opt).from(pdfContainer.value).save()
+  } catch (error) {
+    console.log(error)
+  } finally {
+    loading.value = false
+    showPDF.value = false
   }
-
-  await html2pdf().set(opt).from(pdfContainer.value).save()
-
-  showPDF.value = false
 }
 
 const goToLogin = () => router.replace({ name: 'login' })
 
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
+  answers.value = getAnswersFromLocalStorage()
+  console.log({ RESPUESTAS: answers.value })
 })
 </script>
 
 <style lang="scss" scoped>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  opacity: 2;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .results-wrapper {
   background-color: #f2f2f2;
   color: #333333;

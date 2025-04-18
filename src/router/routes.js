@@ -13,12 +13,6 @@ export default [
     meta: { requiresAuth: true },
   },
   {
-    path: '/print',
-    name: 'print',
-    component: () => import('@/views/ResultsPDF.vue'),
-    meta: { requiresAuth: true },
-  },
-  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundView.vue'),

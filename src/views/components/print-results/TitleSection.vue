@@ -98,10 +98,9 @@ defineProps({
 .title-section {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
-  align-items: baseline;
-  width: 100%;
-  margin-top: -30px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 99%;
   .title {
     color: #242c4f;
     font-size: 25px;
