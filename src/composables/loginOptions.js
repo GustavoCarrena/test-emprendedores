@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/vue-query'
-import optionsService from '@/api/questionsService'
+import optionsService from '@/api/optionsService'
 
-export const useQuestions = () => {
+export const useOptions = () => {
   const query = useQuery({
     queryKey: ['options'],
     queryFn: () => optionsService.getOptions(),

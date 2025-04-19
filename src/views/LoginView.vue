@@ -50,7 +50,7 @@
       <Form
         v-slot="$form"
         class="flex flex-col items-center justify-center p-4 gap-4 form-style"
-        :validateOnValueUpdate="false"
+        :validateOnValueUpdate="true"
         :resolver
         :initialValues
         @submit="handleLogin"
@@ -58,13 +58,14 @@
         <InputText
           class="w-full"
           name="username"
-          label="Nombre y Apellido"
+          label="Nombre y Apellido *"
           :errorMsg="$form.username?.error?.message"
         />
+
         <InputText
           class="w-full"
           name="email"
-          label="Correo Electrónico"
+          label="Correo Electrónico *"
           :errorMsg="$form.email?.error?.message"
         />
         <div class="phone-city">
@@ -72,91 +73,84 @@
 
           <div class="flex flex-col items-start gap-0.5 city">
             <label class="pl-1 text-sm font-semibold" for="inputtext"
-              >Provincia</label
+              >Provincia *
+              <span
+                v-if="!selectedProvincia"
+                class="text-xs text-red-600 font-normal"
+                >(Campo obligatorio)</span
+              ></label
             >
             <Select
-              v-model="selectedCity"
-              :options="cities"
-              optionLabel="name"
+              v-model="selectedProvincia"
+              :options="data?.provincias"
+              optionLabel="nombre"
               class="w-full"
-            />
+              :invalid="!selectedProvincia"
+            >
+              <template #option="{ option }">
+                <span class="text-xs"> {{ option?.nombre }}</span>
+              </template>
+              <template #value="{ value }">
+                <span
+                  class="text-xs text-left w-full flex justify-baseline items-center h-6"
+                >
+                  {{ value?.nombre }}</span
+                >
+              </template>
+            </Select>
           </div>
         </div>
 
         <div
           class="flex flex-col justify-center items-baseline mt-3 checkbox-wrapper"
         >
-          <div class="title">Marcá la opción que corresponda:</div>
+          <div class="title">
+            Marcá la opción que corresponda: *
+            <span
+              v-if="!selectedOption"
+              class="text-xs text-red-600 font-normal"
+              >(Campo obligatorio)</span
+            >
+          </div>
           <div class="flex flex-col justify-center items-baseline">
-            <div class="flex items-center gap-2 mt-4">
+            <div
+              v-for="option in data?.situacion"
+              :key="option.id"
+              class="flex items-center gap-2 mt-4"
+            >
               <RadioButton
                 v-model="selectedOption"
-                inputId="option1"
-                name="option"
-                value="option1"
+                :inputId="option?.id.toString()"
+                name="situacion"
+                :value="option?.id"
               />
-              <label for="option1" class="checkbox-labels">
-                Tengo un emprendimiento que registra ventas
-              </label>
-            </div>
-            <div class="flex items-center gap-2 mt-4">
-              <RadioButton
-                v-model="selectedOption"
-                inputId="option2"
-                name="option"
-                value="option2"
-              />
-              <label for="option2" class="checkbox-labels">
-                Estoy desarrollando el producto/ servicio
-              </label>
-            </div>
-            <div class="flex items-center gap-2 mt-4">
-              <RadioButton
-                v-model="selectedOption"
-                inputId="option3"
-                name="option"
-                value="option3"
-              />
-              <label for="option3" class="checkbox-labels">
-                Quiero emprender pero no tengo claro el proyecto aún
+              <label :for="option?.id" class="checkbox-labels">
+                {{ option.texto }}
               </label>
             </div>
 
-            <div v-if="selectedOption === 'option1'" class="mt-4 text-left">
+            <div v-if="selectedOption === 1" class="mt-4 text-left">
               <div class="title">
                 ¿Hace cuanto tiempo realizaste la primera venta?
+                <span
+                  v-if="selectedOption === 1 && !selectedOptionFirstSale"
+                  class="text-xs text-red-600 font-normal"
+                  >* (Campo obligatorio)</span
+                >
               </div>
-              <div class="flex items-center gap-2 mt-4">
+              <div
+                v-for="option in data?.primera_venta"
+                :key="option.id"
+                class="flex items-center gap-2 mt-4"
+              >
                 <RadioButton
-                  v-model="selectedOption1"
-                  inputId="option1-option1"
-                  name="option1"
-                  value="option1-option1"
+                  v-model="selectedOptionFirstSale"
+                  :inputId="option?.id.toString()"
+                  name="primera_venta"
+                  :value="option?.id"
                 />
-                <label for="option3" class="checkbox-labels">
-                  Mas de 2 años
-                </label>
-              </div>
-              <div class="flex items-center gap-2 mt-4">
-                <RadioButton
-                  v-model="selectedOption1"
-                  inputId="option1-option2"
-                  name="option1"
-                  value="option1-option2"
-                />
-                <label for="option3" class="checkbox-labels">
-                  Menos de 2 años
-                </label>
-              </div>
-              <div class="flex items-center gap-2 mt-4">
-                <RadioButton
-                  v-model="selectedOption1"
-                  inputId="option1-option3"
-                  name="option1"
-                  value="option1-option3"
-                />
-                <label for="option3" class="checkbox-labels">
-                  Menos de 6 meses
+                <label :for="option?.id" class="checkbox-labels">
+                  {{ option.texto }}
                 </label>
               </div>
             </div>
@@ -176,9 +170,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import router from '@/router'
 import { useLogin } from '@/composables/auth.js'
+import { useOptions } from '@/composables/loginOptions.js'
 import {
   setAuthToLocalStorage,
   deleteAuthFromLocalStorage,
@@ -195,29 +190,30 @@ import RadioButton from 'primevue/radiobutton'
 
 const toast = useToast()
 const selectedOption = ref(false)
-const selectedOption1 = ref(false)
+const selectedOptionFirstSale = ref(false)
+const selectedProvincia = ref()
 
 const initialValues = ref({
   username: '',
   email: '',
   phone: '',
-  selectedCity: [],
-  selectedCheckBox: false,
+  selectedProvincia: [],
+  selectedOption: false,
 })
 
 const { isPending, mutateAsync: login } = useLogin()
+const { isPending: optionsPending, data } = useOptions()
 
-const selectedCity = ref()
-const cities = ref([
-  { name: 'New York', code: 'NY' },
-  { name: 'Rome', code: 'RM' },
-  { name: 'London', code: 'LDN' },
-  { name: 'Istanbul', code: 'IST' },
-  { name: 'Paris', code: 'PRS' },
-])
+const manualValidations = computed(() =>
+  selectedOption.value === 1
+    ? selectedProvincia.value &&
+      selectedOption.value &&
+      selectedOptionFirstSale.value
+    : selectedProvincia.value && selectedOption.value
+)
 
 const handleLogin = async ({ states: { username, email, phone }, valid }) => {
-  if (valid) {
+  if (valid && manualValidations.value) {
     try {
       // const response = await login({
       //   username: username.value,
@@ -227,20 +223,16 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
       // await setAuthToLocalStorage(response)
       // router.replace({ name: 'home' })
       const response = {
-        nombre: username.value,
         email: email.value,
+        nombre: username.value,
         celular: phone.value,
-        provincia: selectedCity.value,
-        //situacion (mandar ID)
-        //primera venta (de opcion 1, id 1 ) - Tambien mandar ID, pero como propiedad por separado
-
-        situacion:
-          selectedOption.value === 'option1'
-            ? { [selectedOption.value]: [selectedOption1.value] }
-            : [selectedOption.value],
+        provincia: selectedProvincia.value?.id.toString(),
+        situacion: selectedOption.value,
+        primera_venta:
+          selectedOption.value === 1 ? selectedOptionFirstSale.value : null,
       }
 
-      console.log({ response })
+      console.log('response', { response })
       router.replace({ name: 'home' })
     } catch (error) {
       console.log(error)

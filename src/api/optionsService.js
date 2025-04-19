@@ -1,5 +1,5 @@
 // import { api } from './index'
-import { loginOptions } from '@/constants/login/options'
+import { loginOptions } from '@/constants/login/options.js'
 
 const options = {
   getOptions: async () => {
