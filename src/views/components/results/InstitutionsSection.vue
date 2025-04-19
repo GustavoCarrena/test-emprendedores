@@ -54,6 +54,12 @@ defineProps({
   @media (min-width: 768px) {
     width: 85%;
   }
+  @media (min-width: 1024px) {
+    width: 92%;
+  }
+  @media (min-width: 1440px) {
+    width: 95%;
+  }
   .institutions-wrapper {
     display: flex;
     flex-flow: column nowrap;
@@ -94,6 +100,12 @@ defineProps({
   width: 100%;
   @media (min-width: 768px) {
     width: 85%;
+  }
+  @media (min-width: 1024px) {
+    width: 92%;
+  }
+  @media (min-width: 1440px) {
+    width: 95%;
   }
   .remember-wrapper {
     padding: 3%;

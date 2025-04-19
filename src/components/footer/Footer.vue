@@ -26,7 +26,7 @@
   .footer-img {
     height: 50px;
     @media (min-width: 1024px) {
-      padding-left: 5%;
+      padding-left: 8.5%;
       height: 60px;
     }
   }

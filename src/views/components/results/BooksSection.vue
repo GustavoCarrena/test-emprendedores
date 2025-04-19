@@ -1,6 +1,6 @@
 <template>
+  <div class="books-title">Libros sugeridos:</div>
   <section class="books-section">
-    <div class="books-title">Libros sugeridos:</div>
     <div v-for="book in results.libros" :key="book.id" class="books-wrapper">
       <div class="books-header">
         <i
@@ -24,6 +24,25 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+.books-title {
+  text-align: left;
+  align-self: baseline;
+  color: #333333;
+  font-weight: 600;
+  font-size: 21px;
+  padding: 0.5rem 0 0.8rem 5%;
+  @media (min-width: 768px) {
+    padding: 0.5rem 0 0.8rem 12%;
+  }
+  @media (min-width: 1024px) {
+    font-size: 24px;
+    margin-top: 15px;
+    padding: 0.5rem 0 0.8rem 8.5%;
+  }
+  @media (min-width: 1440px) {
+    padding: 0.5rem 0 0.8rem 7%;
+  }
+}
 .books-section {
   display: flex;
   flex-flow: column nowrap;
@@ -35,26 +54,24 @@ defineProps({
     width: 75%;
     margin-bottom: 35px;
     @media (min-width: 1024px) {
-      width: 72%;
+      width: 84%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      justify-items: center;
+    }
+    @media (min-width: 1200px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      justify-content: flex-start;
+      width: 83%;
+    }
+    @media (min-width: 1440px) {
+      width: 86%;
     }
   }
-  .books-title {
-    text-align: left;
-    align-self: baseline;
-    color: #333333;
-    font-weight: 600;
-    font-size: 21px;
-    padding: 0.5rem 0 0.8rem 5%;
-    @media (min-width: 768px) {
-      padding: 0.5rem 0 0.8rem 0;
-      align-self: center;
-    }
-    @media (min-width: 1024px) {
-      align-self: baseline;
-      font-size: 24px;
-      margin-top: 10px;
-    }
-  }
+
   .books-wrapper {
     display: flex;
     flex-flow: column nowrap;
@@ -73,6 +90,7 @@ defineProps({
       #b5b5b5 0px 0px 2px;
     @media (min-width: 1024px) {
       width: 100%;
+      max-width: 410px;
     }
 
     .books-header {
@@ -84,13 +102,15 @@ defineProps({
       justify-content: center;
       padding: 2%;
       @media (min-width: 1024px) {
-        font-size: 17.5px;
+        font-size: 15px;
+        // border: 1px solid blue;
+        height: 120px;
       }
       .book-image {
         margin-bottom: 5px;
         font-size: 1.4rem;
         @media (min-width: 1024px) {
-          font-size: 1.75rem;
+          font-size: 1.6rem;
         }
       }
     }

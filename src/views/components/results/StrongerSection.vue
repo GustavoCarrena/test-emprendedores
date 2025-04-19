@@ -1,6 +1,6 @@
 <template>
+  <div class="stronger-title">Además fortalecete en:</div>
   <section class="stronger-section">
-    <div class="stronger-title">Además fortalecete en:</div>
     <div
       v-for="recomendations in results.recomendaciones_adicionales"
       :key="recomendations.id"
@@ -50,6 +50,25 @@ function splitTextWithLink(item) {
 </script>
 
 <style lang="scss" scoped>
+.stronger-title {
+  text-align: left;
+  align-self: baseline;
+  color: #333333;
+  font-weight: 600;
+  font-size: 21px;
+  padding: 0.5rem 0 0.8rem 5%;
+  @media (min-width: 768px) {
+    padding: 0.5rem 0 0.8rem 12%;
+  }
+  @media (min-width: 1024px) {
+    font-size: 24px;
+    margin-top: 15px;
+    padding: 0.5rem 0 0.8rem 8.5%;
+  }
+  @media (min-width: 1440px) {
+    padding: 0.5rem 0 0.8rem 7%;
+  }
+}
 .stronger-section {
   display: flex;
   flex-flow: column nowrap;
@@ -60,20 +79,19 @@ function splitTextWithLink(item) {
     width: 85%;
   }
   @media (min-width: 1024px) {
-    width: 80%;
+    width: 83%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
   }
-  .stronger-title {
-    text-align: left;
-    align-self: baseline;
-    color: #333333;
-    font-weight: 600;
-    font-size: 21px;
-    padding: 0.5rem 0 0.8rem 5%;
-    @media (min-width: 1024px) {
-      font-size: 24px;
-      margin-top: 15px;
-    }
+  @media (min-width: 1440px) {
+    width: 86%;
+    justify-items: flex-start;
+    justify-content: space-between;
+    gap: 20px 120px;
   }
+
   .box-wrapper {
     display: flex;
     flex-flow: column nowrap;
@@ -81,7 +99,13 @@ function splitTextWithLink(item) {
     justify-content: center;
     width: 90%;
     margin-bottom: 15px;
-
+    @media (min-width: 1024px) {
+      width: 100%;
+      height: 100%;
+    }
+    @media (min-width: 1440px) {
+      width: 100%;
+    }
     .box-header {
       width: 100%;
       font-weight: 600;
@@ -105,7 +129,11 @@ function splitTextWithLink(item) {
         text-align: left;
         padding: 10px;
         @media (min-width: 1024px) {
-          font-size: 13.5px;
+          font-size: 15px;
+          height: 95px;
+        }
+        @media (min-width: 1440px) {
+          height: 85px;
         }
       }
     }

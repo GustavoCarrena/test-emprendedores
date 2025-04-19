@@ -28,7 +28,13 @@ defineProps({
   justify-content: center;
   width: 100%;
   @media (min-width: 768px) {
-    width: 80%;
+    width: 85%;
+  }
+  @media (min-width: 1024px) {
+    width: 92%;
+  }
+  @media (min-width: 1440px) {
+    width: 96%;
   }
 
   .suggestions-wrapper {

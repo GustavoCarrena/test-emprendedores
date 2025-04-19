@@ -118,12 +118,26 @@ onMounted(() => {
     align-items: center;
     gap: 15px;
     margin: 15px 0;
+    @media (min-width: 1024px) {
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      width: 82%;
+      margin: 45px 0;
+    }
+    @media (min-width: 1440px) {
+      width: 85%;
+    }
     .button-home {
       color: #fafafa;
       font-size: 15px;
       width: 200px;
       background-color: #242c4f;
       border-color: #242c4f;
+      @media (min-width: 1024px) {
+        height: 50px;
+        font-size: 18px;
+        width: 240px;
+      }
     }
     .button-download {
       color: #fafafa;
@@ -131,6 +145,11 @@ onMounted(() => {
       width: 200px;
       background-color: #2e7d33;
       border-color: #2e7d33;
+      @media (min-width: 1024px) {
+        height: 55px;
+        font-size: 18px;
+        width: 240px;
+      }
     }
   }
 }

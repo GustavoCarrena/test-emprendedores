@@ -4,7 +4,7 @@
       <Image
         src="/src/assets/header_secretaria.svg"
         alt="Image"
-        imageStyle="padding-left:5%; height: 75px"
+        imageStyle="padding-left:6%; height: 75px"
       />
     </div>
   </nav>
