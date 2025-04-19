@@ -110,7 +110,9 @@ onMounted(() => {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-
+  @media (min-width: 1200px) {
+    padding: 0 1.5%;
+  }
   .button-section {
     display: flex;
     flex-flow: column nowrap;
