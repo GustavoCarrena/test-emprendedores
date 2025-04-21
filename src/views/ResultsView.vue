@@ -5,7 +5,6 @@
     <StrongerSection v-if="results.resultado_id !== 4" :results />
     <BooksSection :results />
     <InstitutionsSection :results />
-
     <section class="button-section">
       <Button class="button-home" label="Volvé al Inicio" @click="goToLogin" />
       <Button
@@ -15,7 +14,7 @@
       />
     </section>
     <div v-if="loading" class="loading-overlay">
-      <ProgressSpinner />
+      <p class="loading-text">Descargando resultados, por favor aguarde...</p>
     </div>
     <Teleport v-if="showPDF" to="body">
       <div ref="pdfContainer">
@@ -26,7 +25,6 @@
 </template>
 
 <script setup>
-import ProgressSpinner from 'primevue/progressspinner'
 import 'primeicons/primeicons.css'
 import Button from 'primevue/button'
 import router from '@/router'
@@ -88,14 +86,23 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.loading-text {
+  font-size: 24px;
+  color: #3498db;
+  text-align: center;
+  animation: blink 1.5s ease-in-out infinite;
+  font-family: sans-serif;
+  margin-top: 20px;
+}
+
 .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: white;
-  opacity: 2;
+  background-color: #fafafa;
+  opacity: 1;
   z-index: 9999;
   display: flex;
   justify-content: center;
