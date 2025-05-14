@@ -80,11 +80,6 @@ watch(
     width: 85vw;
     justify-self: center;
   }
-  @media (min-width: 1024px) {
-    // flex-flow: row nowrap;
-    // justify-content: baseline;
-    // align-items: baseline;
-  }
 
   .question-box {
     padding: 5px 0;

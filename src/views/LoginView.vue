@@ -75,7 +75,7 @@
             <label class="pl-1 text-sm font-semibold" for="inputtext"
               >Provincia *
               <span
-                v-if="!selectedProvincia"
+                v-if="!selectedProvincia?.id"
                 class="text-xs text-red-600 font-normal"
                 >(Campo obligatorio)</span
               ></label
@@ -86,6 +86,7 @@
               optionLabel="nombre"
               class="w-full"
               :invalid="!selectedProvincia"
+              :loading="optionsPending"
             >
               <template #option="{ option }">
                 <span class="text-xs"> {{ option?.nombre }}</span>
@@ -191,7 +192,7 @@ import RadioButton from 'primevue/radiobutton'
 const toast = useToast()
 const selectedOption = ref(false)
 const selectedOptionFirstSale = ref(false)
-const selectedProvincia = ref()
+const selectedProvincia = ref({})
 
 const initialValues = ref({
   username: '',
@@ -216,10 +217,13 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
   if (valid && manualValidations.value) {
     try {
       // const response = await login({
-      //   username: username.value,
-      //   email: email.value,
-      //   phone: phone.value,
-      // })
+      // email: email.value,
+      // nombre: username.value,
+      // celular: phone.value,
+      // provincia: selectedProvincia.value?.id.toString(),
+      // situacion: selectedOption.value,
+      // primera_venta:
+      //   selectedOption.value === 1 ? selectedOptionFirstSale.value : null,
       // await setAuthToLocalStorage(response)
       // router.replace({ name: 'home' })
       const response = {
@@ -233,7 +237,8 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
       }
 
       console.log('response', { response })
-      router.replace({ name: 'home' })
+      await setAuthToLocalStorage(response)
+      router.push({ name: 'home' })
     } catch (error) {
       console.log(error)
       // showError(
@@ -248,10 +253,11 @@ const handleLogin = async ({ states: { username, email, phone }, valid }) => {
 
 const resolver = yupResolver(loginFormSchema)
 
-// onMounted(() => {
-//   deleteAuthFromLocalStorage()
-// deleteAnswersFromLocalStorage()
-// })
+onMounted(() => {
+  deleteAuthFromLocalStorage()
+  deleteAnswersFromLocalStorage()
+  console.log({ username: initialValues.value })
+})
 </script>
 
 <style lang="scss" scoped>
